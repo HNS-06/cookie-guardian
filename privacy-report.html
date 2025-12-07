@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Report - Cookie Guardian</title>
+    <link rel="stylesheet" href="options.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="report-container">
+        <div class="report-header">
+            <h1><i class="fas fa-shield-alt"></i> Privacy Report</h1>
+            <div class="report-actions">
+                <button class="btn-secondary" id="generateReport">
+                    <i class="fas fa-sync"></i> Generate New
+                </button>
+                <button class="btn-primary" id="exportReport">
+                    <i class="fas fa-download"></i> Export PDF
+                </button>
+            </div>
+        </div>
+
+        <div class="report-summary">
+            <div class="summary-card">
+                <h3>Privacy Score</h3>
+                <div class="score-display" id="privacyScore">85</div>
+                <div class="score-bar">
+                    <div class="score-progress" style="width: 85%"></div>
+                </div>
+                <p class="score-text">Good - Better than 75% of users</p>
+            </div>
+
+            <div class="summary-grid">
+                <div class="summary-item">
+                    <i class="fas fa-eye-slash"></i>
+                    <span>Trackers Blocked</span>
+                    <strong id="trackersBlocked">42</strong>
+                </div>
+                <div class="summary-item">
+                    <i class="fas fa-cookie"></i>
+                    <span>Cookies Protected</span>
+                    <strong id="cookiesProtected">156</strong>
+                </div>
+                <div class="summary-item">
+                    <i class="fas fa-clock"></i>
+                    <span>Auto-deleted</span>
+                    <strong id="autoDeleted">89</strong>
+                </div>
+                <div class="summary-item">
+                    <i class="fas fa-lock"></i>
+                    <span>Encrypted</span>
+                    <strong id="encryptedCount">23</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="report-section">
+            <h2><i class="fas fa-chart-pie"></i> Cookie Distribution</h2>
+            <div class="chart-container">
+                <canvas id="categoryChart"></canvas>
+            </div>
+        </div>
+
+        <div class="report-section">
+            <h2><i class="fas fa-exclamation-triangle"></i> Risk Analysis</h2>
+            <div class="risk-grid" id="riskAnalysis">
+                <!-- Risk items will be populated here -->
+            </div>
+        </div>
+
+        <div class="report-section">
+            <h2><i class="fas fa-globe"></i> Domain Insights</h2>
+            <div class="domain-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Domain</th>
+                            <th>Cookies</th>
+                            <th>Trackers</th>
+                            <th>Risk</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="domainInsights">
+                        <!-- Domain data will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="report-section">
+            <h2><i class="fas fa-lightbulb"></i> Recommendations</h2>
+            <div class="recommendations" id="recommendations">
+                <!-- Recommendations will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="privacy-report.js"></script>
+</body>
+</html>

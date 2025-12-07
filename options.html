@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cookie Guardian Settings</title>
+    <link rel="stylesheet" href="options.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="settings-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <i class="fas fa-cookie-bite"></i>
+                <h2>Cookie Guardian</h2>
+            </div>
+            <nav class="nav-menu">
+                <a href="#rules" class="nav-item active">
+                    <i class="fas fa-cogs"></i>
+                    <span>Site Rules</span>
+                </a>
+                <a href="#audit" class="nav-item">
+                    <i class="fas fa-history"></i>
+                    <span>Audit Log</span>
+                </a>
+                <a href="#whitelist" class="nav-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Whitelist/Blacklist</span>
+                </a>
+                <a href="#encryption" class="nav-item">
+                    <i class="fas fa-lock"></i>
+                    <span>Encryption</span>
+                </a>
+                <a href="#privacy-report" class="nav-item">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Privacy Report</span>
+                </a>
+                <a href="#stats" class="nav-item">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Statistics</span>
+                </a>
+                <a href="#backup" class="nav-item">
+                    <i class="fas fa-database"></i>
+                    <span>Backup & Sync</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <button class="btn-back" onclick="window.close()">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Browser
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Rules Section -->
+            <section id="rules" class="section active">
+                <div class="section-header">
+                    <h1><i class="fas fa-cogs"></i> Site Rules Configuration</h1>
+                    <button class="btn-primary" id="addRuleBtn">
+                        <i class="fas fa-plus"></i> Add New Rule
+                    </button>
+                </div>
+                
+                <div class="rules-list" id="rulesList">
+                    <!-- Rules will be dynamically loaded here -->
+                </div>
+                
+                <div class="default-rule">
+                    <h3><i class="fas fa-asterisk"></i> Default Rule (Applies to all sites)</h3>
+                    <div class="rule-form">
+                        <div class="form-group">
+                            <label>Expiration Time (minutes)</label>
+                            <input type="number" id="defaultExpiration" min="1" max="1440" value="30">
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="defaultEncrypt">
+                                Encrypt sensitive cookies
+                            </label>
+                        </div>
+                        <button class="btn-secondary" id="saveDefaultRule">
+                            Save Default Rule
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Audit Log Section -->
+            <section id="audit" class="section">
+                <div class="section-header">
+                    <h1><i class="fas fa-history"></i> Audit Log</h1>
+                    <div class="audit-controls">
+                        <button class="btn-secondary" id="clearAuditBtn">
+                            <i class="fas fa-trash"></i> Clear Log
+                        </button>
+                        <button class="btn-secondary" id="exportAuditBtn">
+                            <i class="fas fa-download"></i> Export
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="filters">
+                    <input type="text" id="auditFilter" placeholder="Filter by domain or action...">
+                    <select id="auditTypeFilter">
+                        <option value="">All Types</option>
+                        <option value="SET">Cookie Set</option>
+                        <option value="REMOVED">Cookie Removed</option>
+                        <option value="RULE_APPLIED">Rule Applied</option>
+                        <option value="BLACKLIST_DELETED">Blacklisted</option>
+                        <option value="ENCRYPTED">Encrypted</option>
+                    </select>
+                </div>
+                
+                <div class="audit-log" id="auditLog">
+                    <!-- Audit logs will be dynamically loaded here -->
+                </div>
+            </section>
+
+            <!-- Whitelist/Blacklist Section -->
+            <section id="whitelist" class="section">
+                <div class="section-header">
+                    <h1><i class="fas fa-check-circle"></i> Whitelist & Blacklist</h1>
+                    <div class="list-controls">
+                        <button class="btn-primary" id="addToListBtn">
+                            <i class="fas fa-plus"></i> Add Domain
+                        </button>
+                        <select id="listType">
+                            <option value="whitelist">Whitelist</option>
+                            <option value="blacklist">Blacklist</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="list-tabs">
+                    <button class="tab-btn active" data-list="whitelist">Whitelist</button>
+                    <button class="tab-btn" data-list="blacklist">Blacklist</button>
+                </div>
+                
+                <div class="list-container active" id="whitelistContainer">
+                    <!-- Whitelist items will be loaded here -->
+                </div>
+                
+                <div class="list-container" id="blacklistContainer" style="display: none;">
+                    <!-- Blacklist items will be loaded here -->
+                </div>
+            </section>
+
+            <!-- Encryption Section -->
+            <section id="encryption" class="section">
+                <h1><i class="fas fa-lock"></i> Encryption Settings</h1>
+                
+                <div class="encryption-status">
+                    <div class="status-card">
+                        <i class="fas fa-key"></i>
+                        <div>
+                            <h3>Encryption Key</h3>
+                            <p id="keyStatus">Generated and stored locally</p>
+                            <button class="btn-secondary" id="regenerateKeyBtn">
+                                Regenerate Key
+                            </button>
+                            <button class="btn-secondary" id="exportKeyBtn">
+                                Export Key
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="status-card">
+                        <i class="fas fa-shield-alt"></i>
+                        <div>
+                            <h3>Encryption Statistics</h3>
+                            <div class="encryption-stats">
+                                <div class="stat">
+                                    <span class="stat-value" id="encryptedCount">0</span>
+                                    <span class="stat-label">Cookies Encrypted</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-value" id="encryptedDomains">0</span>
+                                    <span class="stat-label">Domains Protected</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="auto-encryption">
+                    <h3><i class="fas fa-robot"></i> Auto-Encryption Rules</h3>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="autoEncryptBanking">
+                            Automatically encrypt banking website cookies
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="autoEncryptSocial">
+                            Automatically encrypt social media cookies
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="autoEncryptShopping">
+                            Automatically encrypt shopping website cookies
+                        </label>
+                    </div>
+                    <button class="btn-primary" id="saveEncryptionSettings">
+                        Save Settings
+                    </button>
+                </div>
+            </section>
+
+            <!-- Privacy Report Section -->
+            <section id="privacy-report" class="section">
+                <div class="section-header">
+                    <h1><i class="fas fa-chart-pie"></i> Privacy Report</h1>
+                    <div class="report-actions">
+                        <button class="btn-primary" id="openReportBtn">
+                            <i class="fas fa-external-link-alt"></i> Open Full Report
+                        </button>
+                        <button class="btn-secondary" id="generateReportBtn">
+                            <i class="fas fa-sync"></i> Generate Now
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="quick-report">
+                    <div class="quick-stat">
+                        <i class="fas fa-shield-alt"></i>
+                        <span class="quick-stat-value" id="privacyScoreQuick">0</span>
+                        <span class="quick-stat-label">Privacy Score</span>
+                    </div>
+                    <div class="quick-stat">
+                        <i class="fas fa-eye-slash"></i>
+                        <span class="quick-stat-value" id="trackersBlockedQuick">0</span>
+                        <span class="quick-stat-label">Trackers Blocked</span>
+                    </div>
+                    <div class="quick-stat">
+                        <i class="fas fa-lock"></i>
+                        <span class="quick-stat-value" id="encryptedQuick">0</span>
+                        <span class="quick-stat-label">Encrypted</span>
+                    </div>
+                </div>
+                
+                <div class="report-preview">
+                    <h3>Recent Privacy Events</h3>
+                    <div class="events-list" id="privacyEvents">
+                        <!-- Privacy events will be loaded here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Statistics Section -->
+            <section id="stats" class="section">
+                <h1><i class="fas fa-chart-bar"></i> Statistics</h1>
+                <div class="stats-container">
+                    <div class="chart-container">
+                        <canvas id="cookieChart"></canvas>
+                    </div>
+                    <div class="stats-cards">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-cookie"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-value" id="totalCookiesStat">0</span>
+                                <span class="stat-label">Total Cookies</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-value" id="protectedCookies">0</span>
+                                <span class="stat-label">Protected</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-value" id="expiringToday">0</span>
+                                <span class="stat-label">Expire Today</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-ban"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-value" id="blacklistedCookies">0</span>
+                                <span class="stat-label">Blacklisted</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="domain-stats">
+                    <h3>Top Domains by Cookie Count</h3>
+                    <div class="domain-list" id="topDomains">
+                        <!-- Top domains will be loaded here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Backup & Sync Section -->
+            <section id="backup" class="section">
+                <h1><i class="fas fa-database"></i> Backup & Cloud Sync</h1>
+                
+                <div class="sync-settings">
+                    <div class="setting-item">
+                        <label>
+                            <input type="checkbox" id="enableSync">
+                            Enable Cloud Sync
+                        </label>
+                        <p class="setting-desc">Sync your rules and settings across browsers</p>
+                    </div>
+                    
+                    <div class="sync-controls" id="syncControls" style="display: none;">
+                        <div class="form-group">
+                            <label>Account Email</label>
+                            <input type="email" id="syncEmail" placeholder="your@email.com">
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" id="syncPassword" placeholder="••••••••">
+                        </div>
+                        <button class="btn-primary" id="setupSyncBtn">Setup Sync</button>
+                    </div>
+                </div>
+                
+                <div class="backup-controls">
+                    <h3>Local Backup</h3>
+                    <div class="action-buttons">
+                        <button class="btn-secondary" id="createBackupBtn">
+                            <i class="fas fa-download"></i> Create Backup
+                        </button>
+                        <button class="btn-secondary" id="restoreBackupBtn">
+                            <i class="fas fa-upload"></i> Restore Backup
+                        </button>
+                        <button class="btn-secondary" id="importExportBtn">
+                            <i class="fas fa-exchange-alt"></i> Import/Export
+                        </button>
+                    </div>
+                    
+                    <div class="backup-history">
+                        <h4>Recent Backups</h4>
+                        <div class="backup-list" id="backupList">
+                            <!-- Backup history will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Rule Modal -->
+    <div class="modal" id="ruleModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add/Edit Site Rule</h3>
+                <button class="btn-icon" id="closeModalBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="ruleForm">
+                    <div class="form-group">
+                        <label>Domain Pattern</label>
+                        <input type="text" id="domainPattern" 
+                               placeholder="example.com or *.example.com or regex pattern"
+                               required>
+                        <small>Use * for wildcard, or regular expression pattern</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Expiration Time (minutes)</label>
+                        <input type="number" id="ruleExpiration" 
+                               min="1" max="1440" value="30" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="ruleEncrypt">
+                            Encrypt sensitive cookies for this domain
+                        </label>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="ruleAutoDelete">
+                            Automatically delete on browser close
+                        </label>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Priority</label>
+                        <select id="rulePriority">
+                            <option value="low">Low</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+                    
+                    <div class="modal-footer">
+                        <button type="button" class="btn-secondary" id="cancelBtn">Cancel</button>
+                        <button type="submit" class="btn-primary">Save Rule</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- List Item Modal -->
+    <div class="modal" id="listItemModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add to List</h3>
+                <button class="btn-icon close-list-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="listItemForm">
+                    <div class="form-group">
+                        <label>Domain Pattern</label>
+                        <input type="text" id="listDomainPattern" 
+                               placeholder="example.com or *.example.com"
+                               required>
+                        <small>Use * for wildcard matching</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>List Type</label>
+                        <select id="newListItemType">
+                            <option value="whitelist">Whitelist</option>
+                            <option value="blacklist">Blacklist</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Notes (Optional)</label>
+                        <textarea id="listItemNotes" rows="3" placeholder="Why is this domain whitelisted/blacklisted?"></textarea>
+                    </div>
+                    
+                    <div class="modal-footer">
+                        <button type="button" class="btn-secondary cancel-list-modal">Cancel</button>
+                        <button type="submit" class="btn-primary">Add to List</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="categories.js"></script>
+    <script src="encryption.js"></script>
+    <script src="sync-manager.js"></script>
+    <script src="utils.js"></script>
+    <script src="options.js"></script>
+</body>
+</html>
